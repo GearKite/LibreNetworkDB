@@ -1,5 +1,5 @@
 {
-  "id": "aa4eda87-d164-4b3c-ba68-6d09aa0c5d25",
+  "id": "7b14387d-e722-4528-a9d4-a797e6c11b1b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,9 +10,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "networks_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "bssid": {
           "name": "bssid",
@@ -85,7 +96,7 @@
         },
         "networkId": {
           "name": "networkId",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -109,7 +120,7 @@
         },
         "altitude": {
           "name": "altitude",
-          "type": "smallint",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -125,20 +136,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "rcois": {
-          "name": "rcois",
+        "service": {
+          "name": "service",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "mfgrid": {
-          "name": "mfgrid",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "service": {
-          "name": "service",
+        "capabilities": {
+          "name": "capabilities",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -276,19 +281,20 @@
           "name": "name",
           "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "email": {
           "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp (0)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -302,7 +308,7 @@
               "nulls": "last"
             }
           ],
-          "isUnique": true,
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -317,7 +323,7 @@
               "nulls": "last"
             }
           ],
-          "isUnique": true,
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -355,6 +361,7 @@
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
     "columns": {},
     "schemas": {},

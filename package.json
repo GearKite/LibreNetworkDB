@@ -21,8 +21,9 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/eslint": "^9.6.0",
 		"@types/node": "^22.2.0",
+		"@types/uuid": "^10.0.0",
 		"autoprefixer": "^10.4.20",
-		"drizzle-kit": "^0.22.8",
+		"drizzle-kit": "^0.23.2",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -40,10 +41,13 @@
 	"type": "module",
 	"dependencies": {
 		"@popperjs/core": "^2.11.8",
-		"drizzle-orm": "^0.31.2",
+		"drizzle-orm": "^0.32.2",
 		"flowbite": "^2.5.1",
 		"flowbite-svelte": "^0.46.15",
 		"postgres": "^3.4.4",
-		"tailwind-merge": "^2.5.0"
-	}
+		"sqlite3": "^5.1.7",
+		"tailwind-merge": "^2.5.0",
+		"uuid": "^10.0.0"
+	},
+	"packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
 }

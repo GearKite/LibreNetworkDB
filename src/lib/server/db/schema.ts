@@ -14,18 +14,21 @@ import {
   index,
   uniqueIndex,
   primaryKey,
-  unique
+  unique,
+  bigint
 } from "drizzle-orm/pg-core";
 
+// Enum for network types
 export const typeEnum = pgEnum("type", ["W", "B", "E"]);
 
+// Users table
 export const users = pgTable(
   "users",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name", { length: 32 }).unique(),
-    email: varchar("email", { length: 255 }).unique(),
-    createdAt: timestamp("createdAt", { precision: 0, withTimezone: false })
+    name: varchar("name", { length: 32 }).notNull().unique(),
+    email: varchar("email", { length: 255 }).notNull().unique(),
+    createdAt: timestamp("createdAt", { precision: 0, withTimezone: false }).defaultNow()
   },
   (table) => {
     return {
@@ -35,40 +38,41 @@ export const users = pgTable(
   }
 );
 
+// Networks table
 export const networks = pgTable(
   "networks",
   {
-    id: integer("id").primaryKey(),
+    id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
     bssid: macaddr("bssid").notNull(),
     type: typeEnum("type").notNull()
   },
   (table) => {
     return {
-      unique: unique().on(table.bssid, table.type),
+      unique: unique().on(table.bssid, table.type), // there can only be 1 network for this combination
       bssid_idx: index().on(table.bssid),
       type_idx: index().on(table.type)
     };
   }
 );
 
+// Observations table
 export const observations = pgTable(
   "observations",
   {
     userId: uuid("userId")
       .notNull()
       .references(() => users.id),
-    networkId: integer("networkId")
+    networkId: bigint("networkId", { mode: "number" })
       .notNull()
       .references(() => networks.id),
     ssid: varchar("ssid", { length: 248 }), // max Bluetooth ssid length
     time: timestamp("time", { precision: 0, withTimezone: false }).notNull(),
-    position: geometry("position", { type: "point", mode: "xy" }).notNull(),
-    altitude: smallint("altitude"),
+    position: geometry("position", { type: "Point", mode: "xy" }).notNull(),
+    altitude: integer("altitude"),
     accuracy: real("accuracy"),
     signal: smallint("signal").notNull(),
-    rcois: text("rcois"),
-    mfgrid: smallint("mfgrid"),
-    service: text("service")
+    service: text("service"),
+    capabilities: text("capabilities")
   },
   (table) => {
     return {

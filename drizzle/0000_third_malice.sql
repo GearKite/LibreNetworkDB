@@ -5,7 +5,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "networks" (
-	"id" integer PRIMARY KEY NOT NULL,
+	"id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "networks_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
 	"bssid" "macaddr" NOT NULL,
 	"type" "type" NOT NULL,
 	CONSTRAINT "networks_bssid_type_unique" UNIQUE("bssid","type")
@@ -13,24 +13,23 @@ CREATE TABLE IF NOT EXISTS "networks" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "observations" (
 	"userId" uuid NOT NULL,
-	"networkId" integer NOT NULL,
+	"networkId" bigint NOT NULL,
 	"ssid" varchar(248),
 	"time" timestamp (0) NOT NULL,
 	"position" geometry(point) NOT NULL,
-	"altitude" smallint,
+	"altitude" integer,
 	"accuracy" real,
 	"signal" smallint NOT NULL,
-	"rcois" text,
-	"mfgrid" smallint,
 	"service" text,
+	"capabilities" text,
 	CONSTRAINT "observations_networkId_time_position_pk" PRIMARY KEY("networkId","time","position")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" varchar(32),
-	"email" varchar(255),
-	"createdAt" timestamp (0),
+	"name" varchar(32) NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"createdAt" timestamp (0) DEFAULT now(),
 	CONSTRAINT "users_name_unique" UNIQUE("name"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
@@ -54,5 +53,5 @@ CREATE INDEX IF NOT EXISTS "observations_networkId_index" ON "observations" USIN
 CREATE INDEX IF NOT EXISTS "observations_ssid_index" ON "observations" USING btree ("ssid");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "observations_time_index" ON "observations" USING btree ("time");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "observations_position_index" ON "observations" USING gist ("position");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "users_name_index" ON "users" USING btree ("name");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "users_email_index" ON "users" USING btree ("email");
+CREATE INDEX IF NOT EXISTS "users_name_index" ON "users" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "users_email_index" ON "users" USING btree ("email");
