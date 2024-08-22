@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "observations" (
 	"networkId" bigint NOT NULL,
 	"ssid" varchar(248),
 	"time" timestamp (0) NOT NULL,
-	"position" geometry(point) NOT NULL,
+	"position" geometry(point, 4326) NOT NULL,
 	"altitude" integer,
 	"accuracy" real,
 	"signal" smallint NOT NULL,
@@ -53,5 +53,5 @@ CREATE INDEX IF NOT EXISTS "observations_networkId_index" ON "observations" USIN
 CREATE INDEX IF NOT EXISTS "observations_ssid_index" ON "observations" USING btree ("ssid");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "observations_time_index" ON "observations" USING btree ("time");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "observations_position_index" ON "observations" USING gist ("position");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "users_name_index" ON "users" USING btree ("name");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "users_email_index" ON "users" USING btree ("email");
+CREATE UNIQUE INDEX IF NOT EXISTS "users_name_index" ON "users" USING btree ("name");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "users_email_index" ON "users" USING btree ("email");

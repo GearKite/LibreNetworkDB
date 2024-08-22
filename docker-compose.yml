@@ -10,3 +10,17 @@ services:
       POSTGRES_DB: local
     volumes:
       - ./.env.db:/var/lib/postgresql/data
+
+  martin:
+    image: ghcr.io/maplibre/martin:latest
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    #command: --save-config config.yaml --default-srid=4326
+    command: --config config.yaml
+    volumes:
+      - ./martin.yaml:/config.yaml
+    environment:
+      - DATABASE_URL=postgres://root:mysecretpassword@db:5432/local
+    depends_on:
+      - db

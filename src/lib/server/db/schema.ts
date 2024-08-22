@@ -67,7 +67,7 @@ export const observations = pgTable(
       .references(() => networks.id),
     ssid: varchar("ssid", { length: 248 }), // max Bluetooth ssid length
     time: timestamp("time", { precision: 0, withTimezone: false }).notNull(),
-    position: geometry("position", { type: "Point", mode: "xy" }).notNull(),
+    position: geometry("position", { type: "point", mode: "xy", srid: 4326 }).notNull(),
     altitude: integer("altitude"),
     accuracy: real("accuracy"),
     signal: smallint("signal").notNull(),

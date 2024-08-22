@@ -1,0 +1,14 @@
+postgres:
+  connection_string: postgres://root:mysecretpassword@db:5432/local
+  default_srid: 4326
+  auto_publish: true
+  tables:
+    observations:
+      schema: public
+      table: observations
+      srid: 4326
+      geometry_column: position
+      geometry_type: POINT
+      properties:
+        networkId: int8
+  functions: {}

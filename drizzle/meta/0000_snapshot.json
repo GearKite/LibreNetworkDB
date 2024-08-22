@@ -1,5 +1,5 @@
 {
-  "id": "7b14387d-e722-4528-a9d4-a797e6c11b1b",
+  "id": "f3a5dcf0-367b-4a29-9cda-6184749ac347",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -114,7 +114,7 @@
         },
         "position": {
           "name": "position",
-          "type": "geometry(point)",
+          "type": "geometry(Point, 4326)",
           "primaryKey": false,
           "notNull": true
         },
@@ -308,7 +308,7 @@
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -323,7 +323,7 @@
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
