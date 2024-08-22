@@ -6,7 +6,7 @@ import { TEMP_FILE_DIR, UPLOAD_PAGE_SIZE } from "$env/static/private";
 import { v4 as uuid } from "uuid";
 import { db } from "$lib/server/db";
 import { networks, observations } from "$lib/server/db/schema.js";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 export const actions = {
   default: async ({ request }) => {
@@ -43,7 +43,7 @@ async function handleDatabaseFile(file: File) {
     }
   });
 
-  let offset = 0;
+  let offset: number = 0;
 
   async function processBatch(offset: number) {
     return new Promise((resolve, reject) => {
@@ -57,22 +57,25 @@ async function handleDatabaseFile(file: File) {
           }
 
           if (rows.length === 0) {
+            console.log('Nothing')
             return resolve(false); // No more data to process
           }
 
           try {
-            const insertPromises = rows.map(async (row) => {
+            const insertPromises = rows.map(async (row: any) => {
               const networkData = {
                 bssid: row.bssid,
                 type: row.type
               };
 
-              let locationData = {
+              let lData = {
                 userId: "00000000-00000000-00000000-00000000",
                 networkId: 1,
                 ssid: removeNullBytes(row.ssid),
                 time: new Date(row.time),
-                position: { x: row.lat, y: row.lon },
+                // possibly https://github.com/drizzle-team/drizzle-orm/issues/2675
+                //position: { x: row.lon, y: row.lat, srid: 4326 },
+                position: sql`ST_SetSRID(ST_MakePoint(${row.lon}, ${row.lat}), 4326)`,
                 altitude: Number(row.altitude).toFixed(0),
                 accuracy: Number(row.accuracy).toFixed(4),
                 signal: Number(row.level).toFixed(0),
@@ -97,8 +100,8 @@ async function handleDatabaseFile(file: File) {
                       )
                     );
                 }
-                locationData.networkId = insertedNetwork[0].id;
-                await db.insert(observations).values(locationData).onConflictDoNothing();
+                lData.networkId = insertedNetwork[0].id;
+                await db.insert(observations).values(lData).onConflictDoNothing();
               })();
             });
 
@@ -123,7 +126,7 @@ async function handleDatabaseFile(file: File) {
 
     while (hasMoreData) {
       hasMoreData = await processBatch(offset);
-      offset += UPLOAD_PAGE_SIZE;
+      offset += Number(UPLOAD_PAGE_SIZE);
     }
 
     console.log("All data processed successfully.");
