@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: local
     volumes:
-      - ./.env.db:/var/lib/postgresql/data
+      - ./.env.db:/var/lib/postgresql
 
   martin:
     image: ghcr.io/maplibre/martin:latest
