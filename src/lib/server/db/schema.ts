@@ -44,13 +44,15 @@ export const networks = pgTable(
   {
     id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
     bssid: macaddr("bssid").notNull(),
-    type: typeEnum("type").notNull()
+    type: typeEnum("type").notNull(),
+    location: geometry("location", { type: "point", mode: "xy", srid: 4326 }),
   },
   (table) => {
     return {
       unique: unique().on(table.bssid, table.type), // there can only be 1 network for this combination
       bssid_idx: index().on(table.bssid),
-      type_idx: index().on(table.type)
+      type_idx: index().on(table.type),
+      location_idx: index().using("gist", table.location)
     };
   }
 );

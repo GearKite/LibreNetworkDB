@@ -1,0 +1,1 @@
+ALTER TABLE "networks" ADD COLUMN "location" geometry(point, 4326) NOT NULL;

@@ -3,12 +3,11 @@ postgres:
   default_srid: 4326
   auto_publish: true
   tables:
-    observations:
+    networks:
       schema: public
-      table: observations
+      table: networks
       srid: 4326
-      geometry_column: position
+      geometry_column: location
       geometry_type: POINT
       properties:
-        networkId: int8
-  functions: {}
+        id: int8
