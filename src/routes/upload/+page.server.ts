@@ -75,7 +75,7 @@ async function handleDatabaseFile(file: File) {
                 time: new Date(row.time),
                 // possibly https://github.com/drizzle-team/drizzle-orm/issues/2675
                 //position: { x: row.lon, y: row.lat, srid: 4326 },
-                position: sql`ST_SetSRID(ST_MakePoint(${row.lon}, ${row.lat}), 4326)`,
+                position: sql`ST_SetSRID(ST_MakePoint(${row.lon.toFixed(7)}, ${row.lat.toFixed(7)}), 4326)`,
                 altitude: Number(row.altitude).toFixed(0),
                 accuracy: Number(row.accuracy).toFixed(4),
                 signal: Number(row.level).toFixed(0),
