@@ -11,6 +11,11 @@
       zoom: 10
     });
 
+    const popup = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false
+    });
+
     map.on("load", () => {
       // Add a geojson point source for the heatmap
       map.addSource("networks", {
@@ -25,15 +30,10 @@
           type: "heatmap",
           source: "networks",
           "source-layer": "networks",
-          minzoom: 0, // Set the minimum zoom level for the heatmap
-          maxzoom: 22, // Set the maximum zoom level for the heatmap
+          minzoom: 0,
+          maxzoom: 22,
           paint: {
-            "heatmap-weight": [
-              "case",
-              ["boolean", ["feature-state", "hover"], false], // Optional: Highlight hovered points
-              1, // Weight for hovered points
-              1 // Weight for all other points
-            ],
+            "heatmap-weight": ["case", ["boolean", ["feature-state", "hover"], false], 1, 1],
             "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.0001, 10000, 4],
             "heatmap-color": [
               "interpolate",
@@ -52,28 +52,12 @@
               1,
               "rgb(178,24,43)"
             ],
-            "heatmap-radius": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              0,
-              2, // Decrease the radius at zoom level 0
-              22, // Adjust the maximum zoom level for the radius
-              10 // Decrease the maximum radius at higher zoom levels
-            ],
-            "heatmap-opacity": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              16,
-              1,
-              22, // Adjust the maximum zoom level for the opacity
-              0
-            ]
+            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 2, 22, 10],
+            "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 16, 1, 22, 0]
           }
         },
         "waterway"
-      ); // Adjust the layer placement as needed
+      );
 
       // Add a circle layer for the observations
       map.addLayer(
@@ -82,7 +66,7 @@
           type: "circle",
           source: "networks",
           "source-layer": "networks",
-          minzoom: 18,
+          minzoom: 16,
           paint: {
             "circle-radius": [
               "interpolate",
@@ -94,21 +78,14 @@
               ["interpolate", ["linear"], ["get", "magnitude"], 1, 5, 6, 50]
             ],
             "circle-color": [
-              "interpolate",
-              ["linear"],
-              ["get", "magnitude"],
-              1,
-              "rgba(33,102,172,0)",
-              2,
-              "rgb(103,169,207)",
-              3,
-              "rgb(209,229,240)",
-              4,
-              "rgb(253,219,199)",
-              5,
-              "rgb(239,138,98)",
-              6,
-              "rgb(178,24,43)"
+              "case",
+              ["==", ["get", "type"], "W"],
+              "blue",
+              ["==", ["get", "type"], "B"],
+              "red",
+              ["==", ["get", "type"], "E"],
+              "orange",
+              "black" // default color
             ],
             "circle-stroke-color": "white",
             "circle-stroke-width": 1,
@@ -116,7 +93,25 @@
           }
         },
         "waterway"
-      ); // Adjust the layer placement as needed
+      );
+
+      // Add event listeners for the point layer
+      map.on("mouseenter", "networks-point", (e) => {
+        // Change the cursor style as a UI indicator
+        map.getCanvas().style.cursor = "pointer";
+
+        if (typeof e.features === "undefined") return;
+
+        const networkId = e.features[0].properties.id;
+
+        console.log(e);
+        popup.setLngLat(e.lngLat).setHTML(`${networkId}`).addTo(map);
+      });
+
+      map.on("mouseleave", "networks-point", () => {
+        map.getCanvas().style.cursor = "";
+        popup.remove();
+      });
     });
   });
 </script>

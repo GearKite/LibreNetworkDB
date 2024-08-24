@@ -11,3 +11,4 @@ postgres:
       geometry_type: POINT
       properties:
         id: int8
+        type: char
