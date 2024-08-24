@@ -2,6 +2,7 @@
   import "maplibre-gl/dist/maplibre-gl.css";
   import maplibregl from "maplibre-gl";
   import { onMount } from "svelte";
+  import { fetchNetworkInfo } from "$lib/networkInfo";
 
   onMount(() => {
     const map = new maplibregl.Map({
@@ -34,7 +35,7 @@
           maxzoom: 22,
           paint: {
             "heatmap-weight": ["case", ["boolean", ["feature-state", "hover"], false], 1, 1],
-            "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.0001, 10000, 4],
+            "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.001, 10000, 4],
             "heatmap-color": [
               "interpolate",
               ["linear"],
@@ -96,17 +97,29 @@
       );
 
       // Add event listeners for the point layer
-      map.on("mouseenter", "networks-point", (e) => {
+      map.on("mouseenter", "networks-point", async (e) => {
         // Change the cursor style as a UI indicator
         map.getCanvas().style.cursor = "pointer";
 
         if (typeof e.features === "undefined") return;
 
-        const networkId = e.features[0].properties.id;
+        popup.setLngLat(e.lngLat).setHTML("Loading...").addTo(map);
 
-        console.log(e);
-        popup.setLngLat(e.lngLat).setHTML(`${networkId}`).addTo(map);
+        const networkId = e.features[0].properties.id;
+        const networkType = networkTypeLookup.get(e.features[0].properties.type);
+        const data = await fetchNetworkInfo(networkId);
+
+        const infoText = `SSID: ${data.ssid}<br>BSSID: ${data.bssid}<br>
+                          First seen: ${data.firstSeen}<br>Last seen: ${data.lastSeen}<br>
+                          Type: ${networkType}<br>Internal ID: ${networkId}`;
+        popup.setHTML(infoText);
       });
+
+      const networkTypeLookup = new Map([
+        ["W", "WiFi"],
+        ["B", "Bluetooth"],
+        ["E", "BLE"]
+      ]);
 
       map.on("mouseleave", "networks-point", () => {
         map.getCanvas().style.cursor = "";
