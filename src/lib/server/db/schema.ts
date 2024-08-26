@@ -43,9 +43,9 @@ export const networks = pgTable(
   "networks",
   {
     id: bigint("id", { mode: "number" }).primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }),
-    bssid: macaddr("bssid").notNull(),
+    bssid: text("bssid").notNull(),
     type: typeEnum("type").notNull(),
-    location: geometry("location", { type: "point", mode: "xy", srid: 4326 }),
+    location: geometry("location", { type: "point", mode: "xy", srid: 4326 })
   },
   (table) => {
     return {

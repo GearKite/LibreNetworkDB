@@ -22,6 +22,13 @@
       "when": 1724478974052,
       "tag": "0002_perfect_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1724663787639,
+      "tag": "0003_empty_brother_voodoo",
+      "breakpoints": true
     }
   ]
 }
