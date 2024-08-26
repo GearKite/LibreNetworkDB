@@ -53,8 +53,7 @@
               1,
               "rgb(178,24,43)"
             ],
-            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 2, 22, 10],
-            "heatmap-opacity": ["interpolate", ["linear"], ["zoom"], 16, 1, 22, 0]
+            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 6, 16, 4]
           }
         },
         "waterway"
