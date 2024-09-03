@@ -47,6 +47,9 @@
       <TableHeadCell>SSID</TableHeadCell>
       <TableHeadCell>Type</TableHeadCell>
       <TableHeadCell>Location</TableHeadCell>
+      <TableHeadCell>Observations</TableHeadCell>
+      <TableHeadCell>First seen</TableHeadCell>
+      <TableHeadCell>Last seen</TableHeadCell>
       <TableHeadCell>
         <span class="sr-only">Edit</span>
       </TableHeadCell>
@@ -67,6 +70,9 @@
           <TableBodyCell
             >{result.location ? `${result.location.y}, ${result.location.x}` : "?"}</TableBodyCell
           >
+          <TableBodyCell>{result.observationCount}</TableBodyCell>
+          <TableBodyCell>{result.firstSeen}</TableBodyCell>
+          <TableBodyCell>{result.lastSeen}</TableBodyCell>
         </TableBodyRow>
       {/each}
     </TableBody>

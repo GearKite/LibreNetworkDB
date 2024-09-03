@@ -1,7 +1,7 @@
 // src/routes/api/search.ts
 import { json, type RequestHandler, error } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
-import { and, ilike, eq } from "drizzle-orm";
+import { and, ilike, eq, count, sql } from "drizzle-orm";
 import { networks, observations } from "$lib/server/db/schema";
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -20,7 +20,10 @@ export const GET: RequestHandler = async ({ url }) => {
       bssid: networks.bssid,
       type: networks.type,
       location: networks.location,
-      ssid: observations.ssid
+      ssid: observations.ssid,
+      observationCount: count(observations),
+      firstSeen: sql`date_trunc('hour', min(observations.time))`,
+      lastSeen: sql`date_trunc('hour', max(observations.time))`
     })
     .from(networks)
     .innerJoin(observations, eq(networks.id, observations.networkId))
