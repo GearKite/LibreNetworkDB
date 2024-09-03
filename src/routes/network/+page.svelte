@@ -62,6 +62,9 @@
     // zoom and rotation controls
     map.addControl(new maplibregl.NavigationControl());
 
+    // Add estimated network location marker
+    const marker = new maplibregl.Marker().setLngLat(networkLocation).addTo(map);
+
     map.on("load", () => {
       map.addSource("observations", {
         type: "geojson",
