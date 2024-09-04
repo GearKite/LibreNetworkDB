@@ -153,8 +153,8 @@
   <Table striped={true} class="w-screen">
     <TableHead>
       <TableHeadCell>Network ID</TableHeadCell>
-      <TableHeadCell>SSID</TableHeadCell>
       <TableHeadCell>Time</TableHeadCell>
+      <TableHeadCell>SSID</TableHeadCell>
       <TableHeadCell>Signal</TableHeadCell>
       <TableHeadCell>Latitude</TableHeadCell>
       <TableHeadCell>Longitude</TableHeadCell>
@@ -170,8 +170,8 @@
       {#each data.observationData as obs}
         <TableBodyRow>
           <TableBodyCell>{data.networkData.id}</TableBodyCell>
-          <TableBodyCell>{obs.ssid}</TableBodyCell>
           <TableBodyCell>{obs.time}</TableBodyCell>
+          <TableBodyCell>{obs.ssid}</TableBodyCell>
           <TableBodyCell>{obs.signal}</TableBodyCell>
           <TableBodyCell>{obs.position.x}</TableBodyCell>
           <TableBodyCell>{obs.position.y}</TableBodyCell>
