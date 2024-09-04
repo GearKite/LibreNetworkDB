@@ -33,10 +33,9 @@
           source: "networks",
           "source-layer": "networks",
           minzoom: 0,
-          maxzoom: 22,
+          maxzoom: 16,
           paint: {
-            "heatmap-weight": ["case", ["boolean", ["feature-state", "hover"], false], 1, 1],
-            "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.001, 10000, 4],
+            "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 0, 0.01, 16, 0.1],
             "heatmap-color": [
               "interpolate",
               ["linear"],
@@ -54,7 +53,7 @@
               1,
               "rgb(178,24,43)"
             ],
-            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 6, 16, 4]
+            "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 0, 1, 16, 4]
           }
         },
         "waterway"
