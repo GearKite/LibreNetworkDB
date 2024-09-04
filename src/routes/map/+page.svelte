@@ -3,11 +3,12 @@
   import maplibregl from "maplibre-gl";
   import { onMount } from "svelte";
   import { fetchNetworkInfo } from "$lib/networkInfo";
+  import { MAPLIBRE_STYLE_URL, NETWORK_TILE_SOURCE } from "$lib/config";
 
   onMount(() => {
     const map = new maplibregl.Map({
       container: "map",
-      style: "https://api.maptiler.com/maps/basic/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
+      style: MAPLIBRE_STYLE_URL,
       center: [24, 56.9],
       zoom: 10
     });
@@ -21,7 +22,7 @@
       // Add a geojson point source for the heatmap
       map.addSource("networks", {
         type: "vector",
-        url: "http://localhost:3000/networks"
+        url: NETWORK_TILE_SOURCE
       });
 
       // Add the heatmap layer
