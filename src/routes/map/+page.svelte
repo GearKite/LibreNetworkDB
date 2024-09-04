@@ -95,6 +95,9 @@
         "waterway"
       );
 
+      let popupActive: boolean = false;
+      let popupNetwork: number;
+
       // Add event listeners for the point layer
       map.on("mouseenter", "networks-point", async (e) => {
         // Change the cursor style as a UI indicator
@@ -108,10 +111,18 @@
         const networkType = networkTypeLookup.get(e.features[0].properties.type);
         const data = await fetchNetworkInfo(networkId);
 
+        popupActive = true;
+        popupNetwork = networkId;
+
         const infoText = `SSID: ${data.ssid}<br>BSSID: ${data.bssid}<br>
                           First seen: ${data.firstSeen}<br>Last seen: ${data.lastSeen}<br>
                           Type: ${networkType}<br>Internal ID: ${networkId}`;
         popup.setHTML(infoText);
+      });
+
+      map.on("click", "networks-point", async (e) => {
+        if (!popupActive) return;
+        window.location.href = `/network?i=${popupNetwork}`;
       });
 
       const networkTypeLookup = new Map([
@@ -122,6 +133,7 @@
 
       map.on("mouseleave", "networks-point", () => {
         map.getCanvas().style.cursor = "";
+        popupActive = false;
         popup.remove();
       });
     });
