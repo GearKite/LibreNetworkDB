@@ -1,7 +1,7 @@
 postgres:
   connection_string: postgres://root:mysecretpassword@db:5432/local
   default_srid: 4326
-  auto_publish: true
+  auto_publish: false
   tables:
     networks:
       schema: public
